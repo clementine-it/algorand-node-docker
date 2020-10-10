@@ -4,7 +4,7 @@ FROM debian:latest
 LABEL author="Giuseppe Zileni <giuseppe.zileni@gmail.com>" maintainer="Giuseppe Zileni <giuseppe.zileni@gmail.com>" version="1.0.0" \
   description="This is a base image for building clementine/algorand-node"
 
-WORKDIR ~/node/data 
+WORKDIR /opt/blockchain
 WORKDIR /var/lib/algorand
 
 # ----------------------------------------------------
@@ -25,5 +25,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y update
 # To get both algorand and the devtools:
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y algorand-devtools
 
-# Or, to only install algorand:
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y algorand
+COPY ./network.json /opt/blockchain
+RUN sudo goal network create -r /opt/blockchain/node1 -n private -t /opt/blockchain/network.json
+RUN sudo goal network start -r /opt/blockchain/node1
